@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Listado de Clientes.",
+    "description": "Guarda clientes en un array, calcula promedio y desviacion estandar entre sus edades, y una fecha probable de muerte asumiendo promedio de vida de ochenta y cinco años.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "clientes",
+      "description": "en este endpoint obtengo el formulario que permite agregar los clientes en mi array."
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "clientes"
+        ],
+        "summary": "Renderiza vista de formulario"
+      }
+    },
+    "/creacliente": {
+      "post": {
+        "tags": [
+          "clientes"
+        ],
+        "summary": "Inserta un nuevo cliente al array",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schemas": {
+                "$ref": "#/components/schemas/BodyClientesPost"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "(array) con la info del los clientes que se han agregado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExitoClientesPost"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kpideclientes": {
+      "get": {
+        "tags": [
+          "kpideclientes"
+        ],
+        "summary": "retorna el array para calcular promedio y desviacion estandar",
+        "responses": {
+          "200": {
+            "description": "(array) con la info del los clientes que se han agregado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExitoClientesGet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/listclientes": {
+      "get": {
+        "tags": [
+          "kpideclientes"
+        ],
+        "summary": "retorna el array para dibujar datos cargardoas mas fecha probable de muerte asumiendo ochenta y cinco años como max de vida.",
+        "responses": {
+          "200": {
+            "description": "(array) con la info del los clientes que se han agregado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExitoClientesGet"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BodyClientesPost": {
+        "type": "objet",
+        "properties": {
+          "Nombre": {
+            "type": "string",
+            "descripction": "Nombre del cliente"
+          },
+          "Apellido": {
+            "type": "string",
+            "descripction": "Apellido del cliente"
+          },
+          "Edad": {
+            "type": "number",
+            "descripction": "Edad del cliente"
+          },
+          "FechaNacimiento": {
+            "type": "date",
+            "descripction": "Fecha de Nacimiento del cliente"
+          }
+        }
+      },
+      "ExitoClientesGet": {
+        "type": "object",
+        "properties": {
+          "Nombre": {
+            "type": "string",
+            "description": "Nombre de los clientes agregados"
+          },
+          "Apellido": {
+            "type": "string",
+            "description": "Apellido de los clientes agregados"
+          },
+          "Edad": {
+            "type": "integer",
+            "description": "Edad de los clientes agregados"
+          },
+          "FechaNacimiento": {
+            "type": "date",
+            "description": "Fecha de Nacimiento de los clientes agregados"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "url": "https://code.jquery.com/jquery-3.5.1.js"
+  }
+}

@@ -1,0 +1,141 @@
+<script>
+function kpideclientes(accion){
+    var suma = 0;
+    var sumatoria=0
+    $.ajax({
+        method: 'get',
+        url: '/kpideclientes',
+       // data: data,
+        success: function(result) {
+            console.log(result)
+            $.each(result, (index, value) =>{
+                suma += parseFloat(value.Edad);  
+                añosMuerte = 85 - value.Edad;
+            });  
+            $.each(result, (index, value) =>{
+                valorMenosPromedio = Math.pow((parseFloat(value.Edad) - parseFloat(promedio)) , 2) ;  
+                sumatoria += valorMenosPromedio;        
+            });
+            var Desviacion = Math.sqrt(((sumatoria.toFixed(2)) / (parseFloat(result.length) - 1) ) ); 
+            if (accion =='P'){
+                var promedio = suma / result.length;
+                $("#valorPromedio").html('El promedio de las edades es de '+ promedio.toFixed(2))
+            }
+            if (accion == 'D') {
+                $("#valorDesviacion").html('La desviacion estándar entre las edades es de '+Desviacion.toFixed(2))}
+          
+        }
+    }); 
+}
+
+function listclientes(){
+    console.log('listclientes')
+    document.getElementById('addtable').innerHTML = '';
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById('addtable').appendChild(table);
+    var suma = 0;
+    var sumatoria=0
+    $.ajax({
+        method: 'get',
+        url: '/listclientes',
+       // data: data,
+        success: function(result) {
+            console.log(result)
+            let row_1 = document.createElement('tr');
+            let heading_1 = document.createElement('th');
+            heading_1.innerHTML = "Nombre";
+            let heading_2 = document.createElement('th');
+            heading_2.innerHTML = "Apellido";
+            let heading_3 = document.createElement('th');
+            heading_3.innerHTML = "Edad";
+            let heading_4 = document.createElement('th');
+            heading_4.innerHTML = "FechaNacimiento";
+            let heading_5 = document.createElement('th');
+            heading_5.innerHTML = "Fecha Probable de Muerte";
+            row_1.appendChild(heading_1);
+            row_1.appendChild(heading_2);
+            row_1.appendChild(heading_3);
+            row_1.appendChild(heading_4);
+            row_1.appendChild(heading_5);
+            thead.appendChild(row_1);
+
+            $.each(result, (index, value) =>{
+                añosMuerte = 85 - value.Edad;
+                var date = new Date(value.FechaNacimiento);
+                var Nacimiento =date.getDate() + '/'+ (date.getMonth() + 1) + '/' +  date.getFullYear();
+                var añoProbableMuerte = date.getFullYear()  +añosMuerte;
+                var fechaProbableMuerte = date.getDate() + '/'+ (date.getMonth() + 1) + '/' + añoProbableMuerte
+                let row_2 = document.createElement('tr');
+                let row_2_data_1 = document.createElement('td');
+                row_2_data_1.innerHTML = value.Nombre;
+                let row_2_data_2 = document.createElement('td');
+                row_2_data_2.innerHTML = value.Apellido;
+                let row_2_data_3 = document.createElement('td');
+                row_2_data_3.innerHTML = value.Edad;
+                let row_2_data_4 = document.createElement('td');
+                row_2_data_4.innerHTML = Nacimiento;
+                let row_2_data_5 = document.createElement('td');
+                row_2_data_5.innerHTML = fechaProbableMuerte;
+                row_2.appendChild(row_2_data_1);
+                row_2.appendChild(row_2_data_2);
+                row_2.appendChild(row_2_data_3);
+                row_2.appendChild(row_2_data_4);
+                row_2.appendChild(row_2_data_5);
+                tbody.appendChild(row_2);
+
+
+            });  
+
+          
+        }
+    }); 
+}
+</script>
+<section >
+<form method="POST" action="/creacliente">
+    <h1 class="text-center"><strong>Ingrese los datos del Cliente</strong></h1>
+    <hr>
+    <div style="margin-bottom: 15px;">
+        <label for="userName-2" class="block">Nombre</label>
+        <input type="text" name="Nombre" id="Nombre" required="" placeholder="Ingrese el Nombre">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="userName-2" class="block">Apellido</label>
+        <input type="text" name="Apellido" id="Apellido" required="" placeholder="Ingrese el Apellido">
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label for="userName-2" class="block">Edad</label>
+        <input type="number" name="Edad" id="Edad" required="" placeholder="Ingrese la Edad">
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label for="userName-2" class="block">Fecha de Nacimiento</label>
+        <input type="date" name="FechaNacimiento" id="FechaNacimiento" required="" >
+    </div>
+    <div>
+        <button type="submit" class="text-center">Ingresar</button>
+    </div>
+    <hr>
+
+</form>
+<div>
+    <button type="button" class="text-center" onclick="listclientes()">Clientes</button>
+    <button type="button" class="text-center" onclick="kpideclientes('P')">Promedio</button>
+    <button type="button" class="text-center" onclick="kpideclientes('D')">Desviación</button>
+</div>
+<h4 id="valorPromedio"></h4>
+
+<h4 id="valorDesviacion"></h4>
+</section>
+
+
+
+ <div id="addtable"></div>
+
+
+
+ 
